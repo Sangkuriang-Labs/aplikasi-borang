@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ContentsController;
+use App\Http\Controllers\SubsController;
+use App\Models\Content;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -34,9 +37,13 @@ Route::middleware([
     return Inertia::render('Dashboard');
   })->name('dashboard');
 
-  Route::get('/testing', function () {
-    return Inertia::render('Testing');
-  });
+  Route::get('/download/{id}', function ($id) {
+    $content = Content::find($id);
+    return response()->download(storage_path('app/public/' . $content->file), explode("/", $content->file)[1]);
+  })->name('download');
+
+  Route::resource('subs', SubsController::class)->only('index', 'show');
+  Route::resource('contents', ContentsController::class)->only('create', 'store', 'destroy');
 
 });
 

@@ -2,14 +2,17 @@
 defineProps({
   type: {
     type: String,
-    default: 'button',
+    default: "button",
   },
 });
 </script>
 
 <template>
-  <button :type="type"
-          class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:ring focus:ring-blue-200 active:text-gray-800 active:bg-gray-50 disabled:opacity-25 transition">
-    <slot/>
+  <button
+    :type="type"
+    class="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+    type="button"
+  >
+    <slot />
   </button>
 </template>

@@ -20,7 +20,7 @@ defineProps({
     </template>
 
     <div>
-      <div class="mx-auto max-w-7xl py-10">
+      <div class="mx-auto py-10">
         <div v-if="$page.props.jetstream.canUpdateProfileInformation">
           <UpdateProfileInformationForm :user="$page.props.user" />
 

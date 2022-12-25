@@ -62,6 +62,13 @@
                 >
                   Dashboard
                 </NavLinkNew>
+                <NavLinkNew
+                  :active="route().current('subs.index')"
+                  :href="route('subs.index')"
+                  :icon="DocumentIcon"
+                >
+                  Dokumen
+                </NavLinkNew>
               </nav>
             </div>
             <div
@@ -72,11 +79,11 @@
                 class="group block flex-shrink-0"
               >
                 <div class="flex items-center">
-                  <div>
+                  <div v-if="$page.props.jetstream.managesProfilePhotos">
                     <img
                       :alt="$page.props.user.name"
                       :src="$page.props.user.profile_photo_url"
-                      class="inline-block h-10 w-10 rounded-full"
+                      class="h-8 w-8 rounded-full object-cover"
                     />
                   </div>
                   <div class="ml-3">
@@ -129,6 +136,13 @@
               :icon="HomeIcon"
               >Dashboard
             </NavLinkNew>
+            <NavLinkNew
+              :active="route().current('subs.index')"
+              :href="route('subs.index')"
+              :icon="DocumentIcon"
+            >
+              Dokumen
+            </NavLinkNew>
           </nav>
         </div>
         <div
@@ -155,7 +169,7 @@
                 <p
                   class="text-xs font-medium text-gray-500 group-hover:text-gray-700"
                 >
-                  View profile
+                  Lihat profile
                 </p>
               </div>
             </div>
@@ -166,7 +180,7 @@
             method="POST"
             variant="danger"
           >
-            Logout
+            Keluar
           </LinkIcon>
         </div>
       </div>
@@ -186,10 +200,12 @@
       </div>
       <main class="flex-1">
         <div class="py-6">
-          <div class="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+          <div
+            class="max-w-8xl mx-auto px-2 text-center sm:px-4 md:px-6 md:text-left"
+          >
             <slot name="header" />
           </div>
-          <div class="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+          <div class="max-w-8xl mx-auto mt-10 px-2 sm:px-4 md:px-6">
             <!-- Replace with your content -->
             <slot />
             <!-- /End replace -->
@@ -209,7 +225,13 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import { HomeIcon, LogoutIcon, MenuIcon, XIcon } from "@heroicons/vue/outline";
+import {
+  DocumentIcon,
+  HomeIcon,
+  LogoutIcon,
+  MenuIcon,
+  XIcon,
+} from "@heroicons/vue/outline";
 import ApplicationLogo from "../Components/ApplicationLogo.vue";
 import LinkIcon from "../Components/LinkIcon.vue";
 import NavLinkNew from "../Components/NavLinkNew.vue";
