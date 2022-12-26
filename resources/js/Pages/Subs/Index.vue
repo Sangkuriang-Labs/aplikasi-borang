@@ -1,7 +1,6 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { computed, onMounted, ref, watch } from "vue";
-import { PlusIcon, TrashIcon } from "@heroicons/vue/solid";
 import { Link } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 import dayjs from "dayjs";
@@ -10,7 +9,7 @@ import "dayjs/locale/id";
 
 dayjs.extend(relativeTime);
 
-const props = defineProps(["standards", "contents", "histories"]);
+const props = defineProps(["standards", "contents"]);
 
 const selectedStandard = ref(null);
 
@@ -33,42 +32,6 @@ watch(selectedStandard, (newValue, oldValue) => {
     { preserveState: true }
   );
 });
-
-const historyData = computed(() => {
-  return props.histories.map((history) => ({
-    id: history.id,
-    author: history.author,
-    content: operationText(history.operation),
-    target: history.title,
-    time: dayjs(history.updated_at).locale("id").fromNow(),
-    icon: operationIcon(history.operation),
-    iconBackground: operationBg(history.operation),
-  }));
-});
-
-function operationText(operation) {
-  if (operation === "ADD") {
-    return "menambahkan dokumen baru pada";
-  } else if (operation === "DELETE") {
-    return "menghapus dokumen pada";
-  }
-}
-
-function operationIcon(operation) {
-  if (operation === "ADD") {
-    return PlusIcon;
-  } else if (operation === "DELETE") {
-    return TrashIcon;
-  }
-}
-
-function operationBg(operation) {
-  if (operation === "ADD") {
-    return "bg-gray-400";
-  } else if (operation === "DELETE") {
-    return "bg-red-400";
-  }
-}
 </script>
 
 <template>
@@ -138,7 +101,7 @@ function operationBg(operation) {
       </div>
       <div class="grid grid-cols-6 gap-5 px-4 py-5 sm:p-6">
         <!-- Content goes here -->
-        <div class="col-span-6 flex flex-col xl:col-span-4">
+        <div class="col-span-6 flex flex-col">
           <div class="sm:flex sm:items-center">
             <div class="sm:flex-auto">
               <h3 class="text-lg font-medium leading-6 text-gray-900">
@@ -238,64 +201,6 @@ function operationBg(operation) {
                 </table>
               </div>
             </div>
-          </div>
-        </div>
-        <!--Timeline-->
-        <div class="col-span-6 xl:col-span-2">
-          <div class="flow-root">
-            <div class="flex justify-between">
-              <h3 class="text-lg font-medium leading-6 text-gray-900">
-                Riwayat
-              </h3>
-              <p class="text-sm font-medium leading-6 text-gray-500">
-                10 data terakhir
-              </p>
-            </div>
-            <ul v-if="historyData.length > 0" class="-mb-8 mt-5" role="list">
-              <li
-                v-for="(history, historyIdx) in historyData"
-                :key="history.id"
-              >
-                <div class="relative pb-8">
-                  <span
-                    v-if="historyIdx !== historyData.length - 1"
-                    aria-hidden="true"
-                    class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"
-                  />
-                  <div class="relative flex space-x-3">
-                    <div>
-                      <span
-                        :class="[
-                          history.iconBackground,
-                          'flex h-8 w-8 items-center justify-center rounded-full ring-8 ring-white',
-                        ]"
-                      >
-                        <component
-                          :is="history.icon"
-                          aria-hidden="true"
-                          class="h-5 w-5 text-white"
-                        />
-                      </span>
-                    </div>
-                    <div
-                      class="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5"
-                    >
-                      <div>
-                        <p class="text-sm text-gray-500">
-                          {{ history.author }} {{ history.content }}
-                          {{ history.target }}
-                        </p>
-                      </div>
-                      <div
-                        class="whitespace-nowrap text-right text-sm text-gray-500"
-                      >
-                        <span>{{ history.time }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
           </div>
         </div>
       </div>

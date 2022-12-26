@@ -9,7 +9,7 @@ class StandardSeeder extends Seeder
 {
   public function run()
   {
-    Standard::create(['title' => "Visi, Misi, Tujuan, dan Strategi", 'desc' => "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis, fugit.", 'number' => '1']);
+    Standard::create(['title' => "Visi, Misi, Tujuan, dan Strategi Program Studi", 'desc' => "Visi, Misi, Tujuan, dan Strategi Program Studi, merupakan standar yang mencakup informasi tentang visi, misi, tujuan, dan strategi program studi yang ingin diakreditasi. Visi, misi, dan tujuan merupakan dokumen yang menjelaskan tentang apa yang ingin dicapai oleh program studi tersebut di masa depan, sedangkan strategi merupakan dokumen yang menjelaskan tentang bagaimana program studi tersebut akan mencapai visi, misi, dan tujuannya", 'number' => '1']);
     Standard::create(['title' => "Tata Pamong, Tata Kelola, dan Kerjasama", 'desc' => "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis, fugit.", 'number' => '2']);
     Standard::create(['title' => "Mahasiswa", 'desc' => "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis, fugit.", 'number' => '3']);
     Standard::create(['title' => "Sumber Daya Manusia", 'desc' => "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis, fugit.", 'number' => '4']);

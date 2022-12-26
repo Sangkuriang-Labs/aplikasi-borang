@@ -13,7 +13,7 @@ return new class extends Migration {
       $table->string('title')->nullable(false);
       $table->string('number')->unique();
       $table->boolean('child')->default(false);
-      $table->string('desc')->nullable(true);
+      $table->text('desc')->nullable(true);
       $table->timestamps();
     });
   }

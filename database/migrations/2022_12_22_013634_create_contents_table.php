@@ -12,6 +12,9 @@ return new class extends Migration {
       $table->foreignId('user_id')->constrained()->cascadeOnDelete();
       $table->foreignId('sub_id')->constrained()->cascadeOnDelete();
       $table->foreignId('major_id')->constrained()->cascadeOnDelete();
+      $table->boolean('approved')->default(false);
+      $table->boolean('graded')->default(false);
+      $table->float('grade')->nullable();
       $table->string('file')->nullable(false);
       $table->timestamps();
     });

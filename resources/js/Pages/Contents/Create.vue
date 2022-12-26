@@ -9,7 +9,7 @@ import TextInput from "../../Components/TextInput.vue";
 import PrimaryButton from "../../Components/PrimaryButton.vue";
 import InputError from "../../Components/InputError.vue";
 
-const props = defineProps(["standards", "subs"]);
+const props = defineProps(["standards", "subs", "majors"]);
 
 const selectedStandard = ref("");
 
@@ -85,6 +85,23 @@ watch(
                     <InputError
                       v-if="form.errors.sub_id"
                       :message="form.errors.sub_id"
+                    />
+                  </div>
+
+                  <div
+                    v-if="usePage().props.value.level >= 3"
+                    class="col-span-6 sm:col-span-3"
+                  >
+                    <InputLabel for="major_id" value="Program Studi" />
+                    <SelectMenu
+                      id="major_id"
+                      v-model="form.major_id"
+                      :data-option="majors"
+                      name="major_id"
+                    />
+                    <InputError
+                      v-if="form.errors.major_id"
+                      :message="form.errors.major_id"
                     />
                   </div>
 

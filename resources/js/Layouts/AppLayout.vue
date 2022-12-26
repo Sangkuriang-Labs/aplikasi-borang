@@ -66,8 +66,51 @@
                   :active="route().current('subs.index')"
                   :href="route('subs.index')"
                   :icon="DocumentIcon"
+                  v-if="
+                    usePage().props.value.level > 0 &&
+                    usePage().props.value.level < 3
+                  "
                 >
                   Dokumen
+                </NavLinkNew>
+                <NavLinkNew
+                  v-if="usePage().props.value.level > 2"
+                  :active="route().current('operator.contents.index')"
+                  :href="route('operator.contents.index')"
+                  :icon="DocumentIcon"
+                >
+                  Dokumen
+                </NavLinkNew>
+                <NavLinkNew
+                  v-if="usePage().props.value.level > 2"
+                  :active="route().current('operator.grading.index')"
+                  :href="route('operator.grading.index')"
+                  :icon="ClipboardListIcon"
+                >
+                  Penilaian Dokumen
+                </NavLinkNew>
+                <NavLinkNew
+                  v-if="usePage().props.value.level > 2"
+                  :active="route().current('users.index')"
+                  :href="route('users.index')"
+                  :icon="UserIcon"
+                >
+                  Pengguna
+                </NavLinkNew>
+                <NavLinkNew
+                  v-if="usePage().props.value.level > 2"
+                  :active="route().current('standards.index')"
+                  :href="route('standards.index')"
+                  :icon="DocumentIcon"
+                >
+                  Standar
+                </NavLinkNew>
+                <NavLinkNew
+                  :active="route().current('refferences.index')"
+                  :href="route('refferences.index')"
+                  :icon="InformationCircleIcon"
+                >
+                  Referensi
                 </NavLinkNew>
               </nav>
             </div>
@@ -140,8 +183,67 @@
               :active="route().current('subs.index')"
               :href="route('subs.index')"
               :icon="DocumentIcon"
+              v-if="
+                usePage().props.value.level > 0 &&
+                usePage().props.value.level < 3
+              "
             >
               Dokumen
+            </NavLinkNew>
+            <NavLinkNew
+              v-if="usePage().props.value.level > 2"
+              :active="route().current('operator.contents.index')"
+              :href="route('operator.contents.index')"
+              :icon="DocumentIcon"
+            >
+              Dokumen
+            </NavLinkNew>
+            <NavLinkNew
+              v-if="usePage().props.value.level > 2"
+              :active="route().current('operator.grading.index')"
+              :href="route('operator.grading.index')"
+              :icon="ClipboardListIcon"
+            >
+              Penilaian Dokumen
+            </NavLinkNew>
+            <NavLinkNew
+              v-if="usePage().props.value.level > 2"
+              :active="route().current('users.index')"
+              :href="route('users.index')"
+              :icon="UserIcon"
+            >
+              Pengguna
+            </NavLinkNew>
+            <NavLinkNew
+              v-if="usePage().props.value.level > 2"
+              :active="route().current('standards.index')"
+              :href="route('standards.index')"
+              :icon="DocumentIcon"
+            >
+              Standar
+            </NavLinkNew>
+            <NavLinkNew
+              v-if="usePage().props.value.level > 2"
+              :active="route().current('subs.index')"
+              :href="route('subs.index')"
+              :icon="DocumentDuplicateIcon"
+            >
+              Sub
+            </NavLinkNew>
+            <NavLinkNew
+              v-if="usePage().props.value.level > 2"
+              :active="route().current('subs.index')"
+              :href="route('subs.index')"
+              :icon="OfficeBuildingIcon"
+            >
+              Program Studi
+            </NavLinkNew>
+            <NavLinkNew
+              :active="route().current('refferences.index')"
+              :href="route('refferences.index')"
+              :icon="InformationCircleIcon"
+            >
+              Referensi
             </NavLinkNew>
           </nav>
         </div>
@@ -218,7 +320,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { Head, Link } from "@inertiajs/inertia-vue3";
+import { Head, Link, usePage } from "@inertiajs/inertia-vue3";
 import {
   Dialog,
   DialogOverlay,
@@ -235,6 +337,13 @@ import {
 import ApplicationLogo from "../Components/ApplicationLogo.vue";
 import LinkIcon from "../Components/LinkIcon.vue";
 import NavLinkNew from "../Components/NavLinkNew.vue";
+import {
+  ClipboardListIcon,
+  DocumentDuplicateIcon,
+  InformationCircleIcon,
+  OfficeBuildingIcon,
+  UserIcon,
+} from "@heroicons/vue/solid";
 
 defineProps(["title"]);
 

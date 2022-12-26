@@ -11,6 +11,9 @@ class Content extends Model
     'sub_id',
     'major_id',
     'file',
+    'approved',
+    'graded',
+    'grade',
   ];
 
   public function user()

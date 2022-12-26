@@ -1,6 +1,12 @@
 <script setup>
 import AppLayout from "../../Layouts/AppLayout.vue";
-import { PaperClipIcon, PlusIcon, TrashIcon } from "@heroicons/vue/solid";
+import {
+  CheckIcon,
+  LightBulbIcon,
+  PaperClipIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@heroicons/vue/outline";
 import { Link, usePage } from "@inertiajs/inertia-vue3";
 import { computed } from "vue";
 import dayjs from "dayjs";
@@ -28,6 +34,10 @@ function operationText(operation) {
     return "menambahkan dokumen baru pada";
   } else if (operation === "DELETE") {
     return "menghapus dokumen pada";
+  } else if (operation === "APPROVE") {
+    return "memverifikasi dan menyetujui dokumen baru pada";
+  } else if (operation === "GRADING") {
+    return "melakukan peninjauan dan penilaian dokumen pada";
   }
 }
 
@@ -36,6 +46,10 @@ function operationIcon(operation) {
     return PlusIcon;
   } else if (operation === "DELETE") {
     return TrashIcon;
+  } else if (operation === "APPROVE") {
+    return CheckIcon;
+  } else if (operation === "GRADING") {
+    return LightBulbIcon;
   }
 }
 
@@ -44,6 +58,10 @@ function operationBg(operation) {
     return "bg-gray-400";
   } else if (operation === "DELETE") {
     return "bg-red-400";
+  } else if (operation === "APPROVE") {
+    return "bg-green-400";
+  } else if (operation === "GRADING") {
+    return "bg-indigo-400";
   }
 }
 </script>
@@ -112,6 +130,14 @@ function operationBg(operation) {
                   </div>
                   <div class="sm:col-span-2">
                     <dt class="text-sm font-medium text-gray-500">
+                      Penilian Sementara
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900">
+                      {{ contents[0].grade }}
+                    </dd>
+                  </div>
+                  <div class="sm:col-span-2">
+                    <dt class="text-sm font-medium text-gray-500">
                       Tentang dokumen
                     </dt>
                     <dd class="mt-1 text-sm text-gray-900">
@@ -140,22 +166,76 @@ function operationBg(operation) {
                             <span class="ml-2 w-0 flex-1 truncate">
                               {{ dokumen.file.split("/")[1] }}
                             </span>
+                            <span
+                              v-if="!dokumen.approved"
+                              class="inline-flex items-center rounded-md bg-indigo-100 px-2 py-0.5 text-sm font-medium text-indigo-800"
+                            >
+                              <svg
+                                class="mr-1.5 h-2 w-2 animate-ping text-indigo-400"
+                                fill="currentColor"
+                                viewBox="0 0 8 8"
+                              >
+                                <circle cx="4" cy="4" r="3" />
+                              </svg>
+                              Proses Verifikasi
+                            </span>
+                            <span
+                              v-if="
+                                dokumen.approved && dokumen.graded === false
+                              "
+                              class="inline-flex items-center rounded-md bg-green-100 px-2 py-0.5 text-sm font-medium text-green-800"
+                            >
+                              <svg
+                                class="mr-1.5 h-2 w-2 animate-ping text-green-400"
+                                fill="currentColor"
+                                viewBox="0 0 8 8"
+                              >
+                                <circle cx="4" cy="4" r="3" />
+                              </svg>
+                              Proses Penilaian
+                            </span>
+                            <span
+                              v-if="dokumen.approved && dokumen.graded"
+                              class="inline-flex items-center rounded-md bg-green-100 px-2 py-0.5 text-sm font-medium text-green-800"
+                            >
+                              <svg
+                                class="mr-1.5 h-2 w-2 text-green-400"
+                                fill="currentColor"
+                                viewBox="0 0 8 8"
+                              >
+                                <circle cx="4" cy="4" r="3" />
+                              </svg>
+                              Terverifikasi & Ternilai
+                            </span>
                           </div>
                           <div class="ml-4 flex-shrink-0 space-x-3">
                             <Link
                               v-if="
                                 dokumen.user_id ===
-                                usePage().props.value.auth.user.id
+                                  usePage().props.value.auth.user.id ||
+                                usePage().props.value.level >= 2
                               "
                               :href="route('contents.destroy', dokumen.id)"
-                              class="font-medium text-red-600 hover:text-red-500"
+                              as="button"
                               method="DELETE"
+                              class="font-medium text-red-600 hover:text-red-500 hover:underline"
                             >
                               Delete
                             </Link>
+                            <Link
+                              v-if="
+                                usePage().props.value.level >= 2 &&
+                                dokumen.approved !== true
+                              "
+                              :href="route('approved', dokumen.id)"
+                              class="font-medium text-green-600 hover:text-green-500 hover:underline"
+                              method="POST"
+                            >
+                              Approve
+                            </Link>
                             <a
-                              :href="route('download', dokumen.id)"
-                              class="font-medium text-blue-600 hover:text-blue-500"
+                              :href="route('download.content', dokumen.id)"
+                              class="font-medium text-blue-600 hover:text-blue-500 hover:underline"
                             >
                               Download
                             </a>

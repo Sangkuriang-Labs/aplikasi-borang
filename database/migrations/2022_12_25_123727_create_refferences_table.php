@@ -7,17 +7,16 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
   public function up()
   {
-    Schema::create('standards', function (Blueprint $table) {
+    Schema::create('refferences', function (Blueprint $table) {
       $table->id();
-      $table->string('title')->unique();
-      $table->string('number')->unique();
-      $table->text('desc');
+      $table->string('name');
+      $table->string('file');
       $table->timestamps();
     });
   }
 
   public function down()
   {
-    Schema::dropIfExists('standards');
+    Schema::dropIfExists('refferences');
   }
 };

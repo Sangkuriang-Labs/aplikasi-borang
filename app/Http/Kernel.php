@@ -2,6 +2,10 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AuthLevel0;
+use App\Http\Middleware\AuthLevel1;
+use App\Http\Middleware\AuthLevel2;
+use App\Http\Middleware\AuthLevel3;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -30,14 +34,14 @@ class Kernel extends HttpKernel
    */
   protected $middlewareGroups = [
     'web' => [
-        \App\Http\Middleware\EncryptCookies::class,
-        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-        \Illuminate\Session\Middleware\StartSession::class,
-        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \App\Http\Middleware\VerifyCsrfToken::class,
-        \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        \App\Http\Middleware\HandleInertiaRequests::class,
-        \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+      \App\Http\Middleware\EncryptCookies::class,
+      \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+      \Illuminate\Session\Middleware\StartSession::class,
+      \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+      \App\Http\Middleware\VerifyCsrfToken::class,
+      \Illuminate\Routing\Middleware\SubstituteBindings::class,
+      \App\Http\Middleware\HandleInertiaRequests::class,
+      \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
     ],
 
     'api' => [
@@ -65,5 +69,8 @@ class Kernel extends HttpKernel
     'signed' => \App\Http\Middleware\ValidateSignature::class,
     'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    'level.1' => AuthLevel1::class,
+    'level.2' => AuthLevel2::class,
+    'level.3' => AuthLevel3::class,
   ];
 }

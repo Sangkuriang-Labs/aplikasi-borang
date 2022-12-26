@@ -9,8 +9,8 @@ class MajorSeeder extends Seeder
 {
   public function run()
   {
-    Major::create(['name' => 'Prodi 1']);
-    Major::create(['name' => 'Prodi 2']);
-    Major::create(['name' => 'Prodi 3']);
+    Major::create(['name' => 'Perdagangan Internasional (S-1)']);
+    Major::create(['name' => 'Perpustakaan & Sains Informasi (S-1)']);
+    Major::create(['name' => 'Film & Televisi (Sarjana Vokasi / D4)']);
   }
 }

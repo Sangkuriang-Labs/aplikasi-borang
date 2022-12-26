@@ -12,6 +12,7 @@ class History extends Model
     'operation',
     'author',
     'title',
+    'created_at'
   ];
 
   public function major()
