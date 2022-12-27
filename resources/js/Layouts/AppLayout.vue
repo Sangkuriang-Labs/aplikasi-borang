@@ -106,6 +106,22 @@
                   Standar
                 </NavLinkNew>
                 <NavLinkNew
+                  v-if="usePage().props.value.level > 2"
+                  :active="route().current('operator.subs.index')"
+                  :href="route('operator.subs.index')"
+                  :icon="DocumentDuplicateIcon"
+                >
+                  Sub
+                </NavLinkNew>
+                <NavLinkNew
+                  v-if="usePage().props.value.level > 2"
+                  :active="route().current('operator.majors.index')"
+                  :href="route('operator.majors.index')"
+                  :icon="OfficeBuildingIcon"
+                >
+                  Program Studi
+                </NavLinkNew>
+                <NavLinkNew
                   :active="route().current('refferences.index')"
                   :href="route('refferences.index')"
                   :icon="InformationCircleIcon"
@@ -224,16 +240,16 @@
             </NavLinkNew>
             <NavLinkNew
               v-if="usePage().props.value.level > 2"
-              :active="route().current('subs.index')"
-              :href="route('subs.index')"
+              :active="route().current('operator.subs.index')"
+              :href="route('operator.subs.index')"
               :icon="DocumentDuplicateIcon"
             >
               Sub
             </NavLinkNew>
             <NavLinkNew
               v-if="usePage().props.value.level > 2"
-              :active="route().current('subs.index')"
-              :href="route('subs.index')"
+              :active="route().current('operator.majors.index')"
+              :href="route('operator.majors.index')"
               :icon="OfficeBuildingIcon"
             >
               Program Studi

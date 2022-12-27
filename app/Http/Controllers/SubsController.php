@@ -13,10 +13,10 @@ class SubsController extends Controller
 {
   public function index(Request $request)
   {
-    $standards = Standard::all()->map(fn($standard) => ['id' => $standard->id, 'value' => $standard->title, 'number' => $standard->number, 'desc' => $standard->desc]);
+    $standards = Standard::orderBy('number')->get()->map(fn($standard) => ['id' => $standard->id, 'value' => $standard->title, 'number' => $standard->number, 'desc' => $standard->desc]);
 
     if ($request->user()->position()->first()->level >= 3) {
-      $contents = Sub::with('contents', 'standard')->when($request->query('standardId') != "", function ($sub) use ($request) {
+      $contents = Sub::orderBy('number')->with('contents', 'standard')->when($request->query('standardId') != "", function ($sub) use ($request) {
         return $sub->where('standard_id', '=', $request->query('standardId'));
       })->get()
         ->map(fn($content) => [
@@ -35,7 +35,7 @@ class SubsController extends Controller
           ]
         ]);
     } else {
-      $contents = Sub::with('contents', 'standard')->when($request->query('standardId') != "", function ($sub) use ($request) {
+      $contents = Sub::orderBy('number')->with('contents', 'standard')->when($request->query('standardId') != "", function ($sub) use ($request) {
         return $sub->where('standard_id', '=', $request->query('standardId'))->whereHas('contents', function ($content) use ($request) {
           return $content->with('user')->where('major_id', '=', $request->user()->major_id);
         });

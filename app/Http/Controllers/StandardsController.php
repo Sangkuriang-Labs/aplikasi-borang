@@ -10,7 +10,7 @@ class StandardsController extends Controller
 {
   public function index()
   {
-    $standards = Standard::all()->map(fn($standard) => [
+    $standards = Standard::orderBy('number')->get()->map(fn($standard) => [
       'id' => $standard->id,
       'title' => $standard->title,
       'number' => $standard->number,
@@ -47,6 +47,16 @@ class StandardsController extends Controller
 
   public function update(Request $request, Standard $standard)
   {
+    $validated = $request->validate([
+      'id' => 'required',
+      'title' => 'required|string',
+      'number' => 'required|numeric',
+      'desc' => 'required|string',
+    ]);
+
+    $standard->update($validated);
+
+    return redirect(route('standards.index'));
   }
 
   public function destroy(Standard $standard)

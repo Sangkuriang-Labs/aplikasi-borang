@@ -14,34 +14,28 @@ import InputLabel from "../../../Components/InputLabel.vue";
 import TextInput from "../../../Components/TextInput.vue";
 import InputError from "../../../Components/InputError.vue";
 
-const props = defineProps(["standards"]);
+const props = defineProps(["subs", "standards", "majors"]);
 
 const openAdd = ref(false);
 const formAdd = useForm({
-  title: "",
-  number: 0,
-  desc: "",
+  name: "",
 });
 
 const openEdit = ref(false);
 const selectedEdit = ref(null);
 const formEdit = useForm({
   id: 0,
-  title: "",
-  number: 0,
-  desc: "",
+  name: "",
 });
 
 watch(
   () => selectedEdit.value,
   (newValue, oldValue) => {
-    const selectedObject = props.standards.filter(
-      (standard) => standard.id === newValue
+    const selectedObject = props.majors.filter(
+      (major) => major.id === newValue
     );
     formEdit.id = selectedObject[0].id;
-    formEdit.title = selectedObject[0].title;
-    formEdit.number = selectedObject[0].number;
-    formEdit.desc = selectedObject[0].desc;
+    formEdit.name = selectedObject[0].name;
   }
 );
 </script>
@@ -49,15 +43,17 @@ watch(
 <template>
   <AppLayout title="Pengguna">
     <template #header>
-      <h2 class="text-xl font-semibold leading-tight text-gray-800">Standar</h2>
+      <h2 class="text-xl font-semibold leading-tight text-gray-800">
+        Program Studi
+      </h2>
     </template>
     <div class="overflow-hidden rounded-lg bg-white shadow">
       <div class="px-4 py-5 sm:p-6">
         <div class="sm:flex sm:items-center">
           <div class="sm:flex-auto">
-            <h1 class="text-xl font-semibold text-gray-900">Standar</h1>
+            <h1 class="text-xl font-semibold text-gray-900">Program Studi</h1>
             <p class="mt-2 text-sm text-gray-700">
-              Seluruh standar yang tersedia di sistem.
+              Seluruh program studi yang tersedia di dalam sistem.
             </p>
           </div>
           <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
@@ -66,7 +62,7 @@ watch(
               type="button"
               @click="openAdd = true"
             >
-              Tambahkan Standar
+              Tambahkan Program Studi
             </button>
           </div>
         </div>
@@ -85,19 +81,13 @@ watch(
                         class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                         scope="col"
                       >
-                        Number
+                        Id
                       </th>
                       <th
                         class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                         scope="col"
                       >
-                        Judul
-                      </th>
-                      <th
-                        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                        scope="col"
-                      >
-                        Keterangan
+                        Nama Program Studi
                       </th>
                       <th class="relative py-3.5 pl-3 pr-4 sm:pr-6" scope="col">
                         <span class="sr-only">Edit</span>
@@ -105,21 +95,16 @@ watch(
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr v-for="standard in standards" :key="standard.id">
+                    <tr v-for="major in majors" :key="major.id">
                       <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6"
                       >
-                        {{ standard.number }}
+                        {{ major.id }}
                       </td>
                       <td
                         class="whitespace-nowrap px-3 py-4 text-sm text-gray-900"
                       >
-                        {{ standard.title }}
-                      </td>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500"
-                      >
-                        {{ standard.desc.slice(0, 20) + "..." }}
+                        {{ major.name }}
                       </td>
                       <td
                         class="relative space-x-3 whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6"
@@ -128,24 +113,24 @@ watch(
                           class="text-indigo-600 hover:text-indigo-900"
                           @click="
                             () => {
-                              selectedEdit = standard.id;
+                              selectedEdit = major.id;
                               openEdit = true;
                             }
                           "
                         >
                           Edit
                           <span class="sr-only">
-                            {{ standard.title }}
+                            {{ major.name }}
                           </span>
                         </button>
                         <Link
-                          :href="route('standards.destroy', standard.id)"
+                          :href="route('operator.majors.destroy', major.id)"
                           as="button"
                           class="text-red-600 hover:text-red-900"
                           method="DELETE"
                           >Delete
                           <span class="sr-only">
-                            {{ standard.title }}
+                            {{ major.name }}
                           </span>
                         </Link>
                       </td>
@@ -184,7 +169,7 @@ watch(
                 <form
                   class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
                   @submit.prevent="
-                    formAdd.post(route('standards.store'), {
+                    formAdd.post(route('operator.majors.store'), {
                       onSuccess: () => {
                         formAdd.reset();
                         formAdd.clearErrors();
@@ -199,7 +184,7 @@ watch(
                     <div class="px-4 sm:px-6">
                       <div class="flex items-start justify-between">
                         <DialogTitle class="text-lg font-medium text-gray-900"
-                          >Tambahkan Standar Baru
+                          >Tambahkan Program Studi Baru
                         </DialogTitle>
                         <div class="ml-3 flex h-7 items-center">
                           <button
@@ -215,44 +200,17 @@ watch(
                     </div>
                     <div class="relative mt-6 flex-1 space-y-2 px-4 sm:px-6">
                       <div>
-                        <InputLabel for="title" value="Nama" />
+                        <InputLabel for="name" value="Nama Program Studi" />
                         <TextInput
-                          id="title"
-                          v-model="formAdd.title"
+                          id="name"
+                          v-model="formAdd.name"
                           class="mt-2"
-                          name="title"
+                          name="name"
                           type="text"
                         />
                         <InputError
-                          v-if="formAdd.errors.title"
-                          :message="formAdd.errors.title"
-                        />
-                      </div>
-                      <div>
-                        <InputLabel for="number" value="Nomor Standar" />
-                        <TextInput
-                          id="number"
-                          v-model="formAdd.number"
-                          class="mt-2"
-                          name="number"
-                          type="number"
-                        />
-                        <InputError
-                          v-if="formAdd.errors.number"
-                          :message="formAdd.errors.number"
-                        />
-                      </div>
-                      <div>
-                        <InputLabel for="desc" value="Keterangan Standar" />
-                        <textarea
-                          id="desc"
-                          v-model="formAdd.desc"
-                          class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          name="desc"
-                        />
-                        <InputError
-                          v-if="formAdd.errors.desc"
-                          :message="formAdd.errors.desc"
+                          v-if="formAdd.errors.name"
+                          :message="formAdd.errors.name"
                         />
                       </div>
                     </div>
@@ -307,13 +265,16 @@ watch(
                 <form
                   class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
                   @submit.prevent="
-                    formEdit.patch(route('standards.update', formEdit.id), {
-                      onSuccess: () => {
-                        formEdit.reset();
-                        formEdit.clearErrors();
-                        openEdit = false;
-                      },
-                    })
+                    formEdit.patch(
+                      route('operator.majors.update', formEdit.id),
+                      {
+                        onSuccess: () => {
+                          formEdit.reset();
+                          formEdit.clearErrors();
+                          openEdit = false;
+                        },
+                      }
+                    )
                   "
                 >
                   <div
@@ -322,7 +283,7 @@ watch(
                     <div class="px-4 sm:px-6">
                       <div class="flex items-start justify-between">
                         <DialogTitle class="text-lg font-medium text-gray-900"
-                          >Edit Standar
+                          >Edit Program Studi
                         </DialogTitle>
                         <div class="ml-3 flex h-7 items-center">
                           <button
@@ -338,44 +299,17 @@ watch(
                     </div>
                     <div class="relative mt-6 flex-1 space-y-2 px-4 sm:px-6">
                       <div>
-                        <InputLabel for="title" value="Nama" />
+                        <InputLabel for="name" value="Nama Program Studi" />
                         <TextInput
-                          id="title"
-                          v-model="formEdit.title"
+                          id="name"
+                          v-model="formEdit.name"
                           class="mt-2"
-                          name="title"
+                          name="name"
                           type="text"
                         />
                         <InputError
-                          v-if="formEdit.errors.title"
-                          :message="formEdit.errors.title"
-                        />
-                      </div>
-                      <div>
-                        <InputLabel for="number" value="Nomor Standar" />
-                        <TextInput
-                          id="number"
-                          v-model="formEdit.number"
-                          class="mt-2"
-                          name="number"
-                          type="number"
-                        />
-                        <InputError
-                          v-if="formEdit.errors.number"
-                          :message="formEdit.errors.number"
-                        />
-                      </div>
-                      <div>
-                        <InputLabel for="desc" value="Keterangan Standar" />
-                        <textarea
-                          id="desc"
-                          v-model="formEdit.desc"
-                          class="mt-2 block h-52 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          name="desc"
-                        />
-                        <InputError
-                          v-if="formEdit.errors.desc"
-                          :message="formEdit.errors.desc"
+                          v-if="formEdit.errors.name"
+                          :message="formEdit.errors.name"
                         />
                       </div>
                     </div>

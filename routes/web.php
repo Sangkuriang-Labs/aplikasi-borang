@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\ContentsController;
 use App\Http\Controllers\GradingController;
+use App\Http\Controllers\MajorsController;
 use App\Http\Controllers\OperatorController;
 use App\Http\Controllers\RefferencesController;
 use App\Http\Controllers\StandardsController;
 use App\Http\Controllers\SubsController;
+use App\Http\Controllers\SubsOperatorController;
 use App\Http\Controllers\UsersController;
 use App\Models\Content;
 use App\Models\History;
@@ -13,7 +15,6 @@ use App\Models\Major;
 use App\Models\Refference;
 use App\Models\Standard;
 use App\Models\Sub;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -29,12 +30,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-  return Inertia::render('Welcome', [
-    'canLogin' => Route::has('login'),
-    'canRegister' => Route::has('register'),
-    'laravelVersion' => Application::VERSION,
-    'phpVersion' => PHP_VERSION,
-  ]);
+  return redirect(\route('login'));
 });
 
 Route::middleware([
@@ -44,11 +40,11 @@ Route::middleware([
 ])->group(callback: function () {
 
   Route::get('/dashboard', function () {
-    $standards = Standard::with('subs')->get()->map(fn($standard) => [
+    $standards = Standard::orderBy('number')->with('subs')->get()->map(fn($standard) => [
       'id' => $standard->id,
       'title' => $standard->title,
       'count_sub' => Sub::where('standard_id', '=', $standard->id)
-        ->where('child', '=', false)->count(),
+        ->where('child', '=', false)->orderBy('number')->count(),
       'total_grade' => Content::with('major', 'sub', 'user')->whereHas('sub', function ($query) use ($standard) {
         return $query->where('child', '=', false)->where('standard_id', '=', $standard->id);
       })->get()->sum('grade'),
@@ -57,12 +53,12 @@ Route::middleware([
     $majors = Major::with('contents')->get()->map(fn($major) => [
       'id' => $major->id,
       'name' => $major->name,
-      'contents' => Standard::with('subs')->get()->map(function ($standard) use ($major) {
+      'contents' => Standard::orderBy('number')->with('subs')->get()->map(function ($standard) use ($major) {
         return [
           'id' => $standard->id,
           'title' => $standard->title,
           'count_sub' => Sub::where('standard_id', '=', $standard->id)
-            ->where('child', '=', false)->count(),
+            ->where('child', '=', false)->orderBy('number')->count(),
           'total_grade' => Content::with('major', 'sub', 'user')->where('major_id', '=', $major->id)->whereHas('sub', function ($query) use ($standard) {
             return $query->where('child', '=', false)->where('standard_id', '=', $standard->id);
           })->get()->sum('grade'),
@@ -88,19 +84,19 @@ Route::middleware([
 
     if ($updated) {
       History::create([
-        'title' => Sub::with('contents')->whereHas('contents', function ($content) use ($id) {
+        'title' => Sub::with('contents')->orderBy('number')->whereHas('contents', function ($content) use ($id) {
           return $content->where('id', '=', $id);
         })->first()->title,
         'author' => request()->user()->name,
         'operation' => 'APPROVE',
         'major_id' => Content::where('id', '=', $id)->first()->major_id,
-        'sub_id' => Sub::with('contents')->whereHas('contents', function ($content) use ($id) {
+        'sub_id' => Sub::with('contents')->orderBy('number')->whereHas('contents', function ($content) use ($id) {
           return $content->where('id', '=', $id);
         })->first()->id,
       ]);
     }
 
-    return redirect(route('subs.show', Sub::with('contents')->whereHas('contents', function ($content) use ($id) {
+    return redirect(route('subs.show', Sub::with('contents')->orderBy('number')->whereHas('contents', function ($content) use ($id) {
       return $content->where('id', '=', $id);
     })->first()->id));
   })->name('approved')->middleware('level.2');
@@ -115,6 +111,22 @@ Route::middleware([
   Route::resource('subs', SubsController::class)->only('index', 'show')->middleware('level.1');
   Route::resource('contents', ContentsController::class)->only('create', 'store', 'destroy')->middleware('level.1');
   Route::resource('users', UsersController::class)->only('index')->middleware('level.3');
-  Route::resource('standards', StandardsController::class)->only('index', 'store', 'destroy')->middleware('level.3');
+  Route::resource('standards', StandardsController::class)->only('index', 'store', 'update', 'destroy')->middleware('level.3');
+  Route::resource('/operator/subs', SubsOperatorController::class, [
+    'names' => [
+      'index' => 'operator.subs.index',
+      'store' => 'operator.subs.store',
+      'destroy' => 'operator.subs.destroy',
+      'update' => 'operator.subs.update',
+    ],
+  ])->only('index', 'destroy', 'store', 'update')->middleware('level.3');
+  Route::resource('/operator/majors', MajorsController::class, [
+    'names' => [
+      'index' => 'operator.majors.index',
+      'store' => 'operator.majors.store',
+      'destroy' => 'operator.majors.destroy',
+      'update' => 'operator.majors.update'
+    ]
+  ])->only('index', 'store', 'destroy', 'update')->middleware('level.3');
 });
 

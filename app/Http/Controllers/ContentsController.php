@@ -80,8 +80,8 @@ class ContentsController extends Controller
 
   public function create(Request $request)
   {
-    $standards = Standard::all()->map(fn($standard) => ['id' => $standard->id, 'value' => $standard->number . " - " . $standard->title]);
-    $subs = Sub::when($request->query('standardId') != "", function ($query) use ($request) {
+    $standards = Standard::orderBy('number')->get()->map(fn($standard) => ['id' => $standard->id, 'value' => $standard->number . " - " . $standard->title]);
+    $subs = Sub::orderBy('number')->when($request->query('standardId') != "", function ($query) use ($request) {
       return $query->where('standard_id', '=', $request->query('standardId'));
     })->get()->map(fn($sub) => ['id' => $sub->id, 'value' => $sub->number . " - " . $sub->title]);
     $majors = Major::all()->map(fn($major) => ['id' => $major->id, 'value' => $major->name]);

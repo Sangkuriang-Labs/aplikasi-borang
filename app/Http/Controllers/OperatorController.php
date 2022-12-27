@@ -15,8 +15,8 @@ class OperatorController extends Controller
   public function index()
   {
     $majors = Major::all()->map(fn($major) => ['id' => $major->id, 'value' => $major->name]);
-    $standards = Standard::all()->map(fn($standard) => ['id' => $standard->id, 'value' => $standard->title, 'desc' => $standard->desc]);
-    $subs = Sub::when(request()->query('selectedStandard') !== "", function ($query) {
+    $standards = Standard::orderBy('number')->get()->map(fn($standard) => ['id' => $standard->id, 'value' => $standard->title, 'desc' => $standard->desc]);
+    $subs = Sub::orderBy('number')->when(request()->query('selectedStandard') !== "", function ($query) {
       return $query->where('standard_id', '=', request()->query('selectedStandard'));
     })->get()->map(fn($sub) => ['id' => $sub->id, 'value' => $sub->number . " - " . $sub->title]);
 
@@ -65,12 +65,12 @@ class OperatorController extends Controller
       'value' => $major->name,
     ]);
 
-    $standards = Standard::all()->map(fn($standard) => [
+    $standards = Standard::orderBy('number')->get()->map(fn($standard) => [
       'id' => $standard->id,
       'value' => $standard->number . " - " . $standard->title,
     ]);
 
-    $subs = Sub::when(request()->query('majorId') !== "" && request()->query('standardId') !== "", function ($query) {
+    $subs = Sub::orderBy('number')->when(request()->query('majorId') !== "" && request()->query('standardId') !== "", function ($query) {
       return $query->where('standard_id', '=', request()->query('standardId'));
     })->get()->map(fn($sub) => [
       'id' => $sub->id,

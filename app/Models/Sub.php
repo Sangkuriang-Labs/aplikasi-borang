@@ -11,6 +11,7 @@ class Sub extends Model
     'number',
     'child',
     'standard_id',
+    'desc',
   ];
 
   public function standard()
